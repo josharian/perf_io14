@@ -1,0 +1,134 @@
+Go faster
+
+Josh Bleecher Snyder
+PayPal
+josharian@gmail.com
+@offbymany
+
+
+* The usual advice
+
+- Understand the problem
+# Can you solve a cheaper, simpler problem instead?
+# Make sure speed matters.
+
+- Understand your tools
+# Disk vs network vs memory speed, your language
+
+- Get the basics right
+# Caching, lazy initialization, better algorithms
+
+- Benchmark and profile
+
+- Develop good habits
+
+
+* Easy win
+
+- Use the most recent release of Go
+
+
+* Benchmarking and profiling
+# live coding demo (ascii): benchmarks, cpu/mem profiling, pprof, benchcmp
+
+
+* Good habits, part 1
+
+- Write clear code
+# makes it easier to see optimization opportunities
+# clear code is usually simple, and simple is usually fast
+
+- Write good tests
+# facilitates rapid experimentation
+
+- Read the docs
+# they usually provide perf info when important
+# they tell you whether you can reuse/share things
+# particularly the testing package -- there's lots there
+
+- Pay attention to loops
+
+
+* Good habits, part 2
+
+- Know what allocates
+# you don't have to avoid allocations necessarily; just be aware
+
+- Pay attention to data growth: append, concat, map assign
+
+- Provide initial capacity estimates when reasonable
+
+- Pay attention to string/[]byte conversions
+# they are an alloc+copy
+
+
+* Good habits, part 3
+
+- Stream when possible
+# json.NewEncoder instead of json.Marshal)
+
+- Buffer I/O
+# each syscall has a cost
+
+- Careful API design
+# allow streaming, allow Bring Your Own Buffer
+
+- Avoid gratuitous boxing, reflection, and indirection
+# they come with significant cost to perf and readability
+# you frequently don't need them
+
+- Use mutexes instead of channels for simple shared state
+
+
+* I'm stuck
+
+- Experiment, then analyze
+
+# RWMutex sometimes slower than Mutex
+# small maps sometimes slower than slices
+
+- Email golang-nuts (but do your homework first)
+
+# but do your homework first
+
+- Beware microbenchmarks
+
+# always keep the context in mind
+# gather data to help you decide; Go is machine-friendly, so this is easy
+
+- Read "Debugging performance issues in Go programs" by Dmitry Vyukov
+
+
+* Stump the chump
+
+
+* Concurrent performance
+
+- testing.PB and RunParallel
+
+- Block profiling
+
+- Free lists and sync.Pool
+
+# local vs shared; when to use
+
+- Partition shared data structures
+
+- Use buffered channels
+
+
+* Advanced techniques
+
+- Know thy gcflags: -S, -B, -m
+
+# discover with 'go tool 6g -h'
+
+- Defer can be expensive
+
+- Amortize expensive work
+
+- Combine allocations
+
+- Scheduler trace, gc trace
+
+- Codegen for specialization
